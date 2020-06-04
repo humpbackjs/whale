@@ -1,0 +1,28 @@
+{
+  "name": "@fratercula/whale",
+  "private": true,
+  "version": "0.0.1",
+  "description": "RequireJS(AMD) + React",
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "start": "falco -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/humpbackjs/whale.git"
+  },
+  "keywords": [
+    "react",
+    "amd",
+    "requirejs"
+  ],
+  "author": "LoeiFy <LoeiFy@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/humpbackjs/whale/issues"
+  },
+  "homepage": "https://github.com/humpbackjs/whale#readme"
+}
