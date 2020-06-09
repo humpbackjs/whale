@@ -14,6 +14,7 @@ const { resolve } = require('path')
 
 module.exports = {
   mode: 'development',
+  port: 1234,
   entry: resolve('./entry/index.js'),
   template: resolve('./entry/index.html'),
   // output,
