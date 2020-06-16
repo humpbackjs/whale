@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react'
-import { Modal, Input, Select } from 'antd'
+import { Modal, Input, Select, InputNumber, message, Switch } from 'antd'
 import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons'
+import JSONPretty from 'react-json-pretty'
+import 'react-json-pretty/themes/acai.css'
 import classes from './index.module.less'
 
 const Label = ({ name, width }) => (
@@ -11,6 +13,7 @@ export default function ({ visible, onOk, onCancel }) {
   const [args, setArgs] = useState({
     name: undefined,
     version: undefined,
+    silent: false,
     props: [],
   })
   const onChange = useCallback((key, value) => {
@@ -37,11 +40,39 @@ export default function ({ visible, onOk, onCancel }) {
     setArgs({ ...args, props })
   }, [args])
 
+  const props = {}
+
+  args.props.forEach((item) => {
+    if (item.key && typeof item.value === item.type) {
+      props[item.key] = item.value
+    }
+  })
+
+  const result = { ...args, props }
+
+  const onConfirm = useCallback(() => {
+    if (!result.name || !/^[a-z@\/][a-z0-9\/\-]*$/.test(result.name)) {
+      message.error('name error')
+      return
+    }
+    if (!/^\d.\d.\d$/.test(result.version)) {
+      message.error('version error')
+      return
+    }
+    for (let i = 0; i < args.props.length; i += 1) {
+      if (!isNaN(args.props[i].key[0])) {
+        message.error('props error')
+        return
+      }
+    }
+    onOk(result)
+  }, [result])
+
   return (
     <Modal
       title="Edit Component"
       visible={visible}
-      onOk={onOk}
+      onOk={onConfirm}
       onCancel={onCancel}
     >
       <Input
@@ -56,6 +87,10 @@ export default function ({ visible, onOk, onCancel }) {
         value={args.version}
         onChange={(e) => onChange('version', e.target.value)}
       />
+      <div className={classes.props}>
+        Silent
+        <Switch onChange={(v) => onChange('silent', v)} checked={args.silent} className={classes.switch} />
+      </div>
       <div className={classes.props}>
         Props
         <PlusSquareOutlined onClick={onAdd} className={classes.add} />
@@ -80,23 +115,37 @@ export default function ({ visible, onOk, onCancel }) {
           <Option value="string">String</Option>
         </Select>
         {
-          item.type !== 'boolean' ? <Input
+          item.type === 'string' || !item.type ? <Input
             placeholder="value"
             style={{ width: '37%' }}
             value={item.value}
             onChange={(e) => onProps(i, 'value', e.target.value)}
-          /> : <Select
-          placeholder="value"
-          style={{ width: '37%' }}
-          value={item.value}
-          onChange={(v) => onProps(i, 'value', v)}
-        >
-          <Option value={true}>True</Option>
-          <Option value={false}>False</Option>
-        </Select>
+          /> : null
+        }
+        {
+          item.type === 'number' ? <InputNumber
+            placeholder="value"
+            style={{ width: '37%' }}
+            value={item.value}
+            onChange={(v) => onProps(i, 'value', v)}
+          /> : null
+        }
+        {
+          item.type === 'boolean' ? <Select
+            placeholder="value"
+            style={{ width: '37%' }}
+            value={item.value}
+            onChange={(v) => onProps(i, 'value', v)}
+          >
+            <Option value={true}>True</Option>
+            <Option value={false}>False</Option>
+          </Select> : null
         }
         <MinusSquareOutlined onClick={() => onRemove(i)} className={classes.remove} />
       </Input.Group>))
+      }
+      {
+        Object.keys(props).length ? <JSONPretty className={classes.code} data={props} /> : null
       }
     </Modal>
   )

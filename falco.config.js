@@ -18,6 +18,9 @@ module.exports = {
   entry: resolve('./entry/index.js'),
   template: resolve('./entry/index.html'),
   // output,
+  npm: {
+    registry: 'https://registry.npm.taobao.org',
+  },
   externals: [
     {
       name: 'react',

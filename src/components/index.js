@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Table, Space, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import Editor from './editor'
@@ -6,6 +6,11 @@ import Editor from './editor'
 export default function () {
   const [data, setData] = useState([])
   const [visible, setVisible] = useState(false)
+  const onEdit = useCallback((v) => {
+    data.push(v)
+    setData(data.slice(0))
+    setVisible(false)
+  }, [data])
   const columns = [
     {
       title: 'Name',
@@ -25,7 +30,6 @@ export default function () {
       render() {
         return (
           <Space size="middle">
-            <a>Invite {record.name}</a>
             <a>Delete</a>
           </Space>
         )
@@ -35,14 +39,18 @@ export default function () {
 
   return (
     <>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={data} pagination={false} />
       <Button
         type="primary"
         shape="circle"
         icon={<PlusOutlined />}
         onClick={() => setVisible(true)}
       />
-      <Editor visible={visible} />
+      <Editor
+        visible={visible}
+        onCancel={() => setVisible(false)}
+        onOk={onEdit}
+      />
     </>
   )
 }
