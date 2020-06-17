@@ -1,21 +1,37 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { Modal, Input, Select, InputNumber, message, Switch } from 'antd'
 import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons'
-import JSONPretty from 'react-json-pretty'
-import 'react-json-pretty/themes/acai.css'
 import classes from './index.module.less'
 
 const Label = ({ name, width }) => (
   <span style={{ width, display: 'inline-block' }}>{name}</span>
 )
 
-export default function ({ visible, onOk, onCancel }) {
-  const [args, setArgs] = useState({
-    name: undefined,
-    version: undefined,
-    silent: false,
-    props: [],
-  })
+const initial = {
+  name: undefined,
+  version: undefined,
+  silent: false,
+  props: [],
+}
+
+export default function ({ visible, onOk, onCancel, defaultData }) {
+  const [args, setArgs] = useState(initial)
+
+  useEffect(() => {
+    if (!defaultData) {
+      setArgs(initial)
+      return
+    }
+    setArgs({
+      ...defaultData,
+      props: Object.entries(defaultData.props).map(([key, value]) => ({
+        key,
+        type: typeof value,
+        value,
+      }))
+    })
+  }, [defaultData])
+
   const onChange = useCallback((key, value) => {
     setArgs({ ...args, [key]: value })
   }, [args])
@@ -143,9 +159,6 @@ export default function ({ visible, onOk, onCancel }) {
         }
         <MinusSquareOutlined onClick={() => onRemove(i)} className={classes.remove} />
       </Input.Group>))
-      }
-      {
-        Object.keys(props).length ? <JSONPretty className={classes.code} data={props} /> : null
       }
     </Modal>
   )
