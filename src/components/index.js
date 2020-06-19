@@ -8,7 +8,7 @@ import classes from './index.module.less'
 
 export default function () {
   const [data, setData] = useState([{
-    name: 'text-component',
+    name: 'test-component',
     version: '0.1.0',
     silent: true,
     props: {
