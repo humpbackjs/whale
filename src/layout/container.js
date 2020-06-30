@@ -1,18 +1,21 @@
-import React, { memo } from 'react'
+import React from 'react'
+import { useStore } from 'nycticorax'
 import { Dustbin } from './dustbin'
 import { Box } from './box'
 
-export default memo(function Container() {
+export default function () {
+  const { components } = useStore('components')
+
   return (
-    <div>
-      <div style={{ overflow: 'hidden', clear: 'both' }}>
-        <Dustbin />
+    <>
+      <Dustbin />
+      <div>
+        {
+          components.map(({ name }) => (
+            <Box name={name} />
+          ))
+        }
       </div>
-      <div style={{ overflow: 'hidden', clear: 'both' }}>
-        <Box name="Glass" />
-        <Box name="Banana" />
-        <Box name="Paper" />
-      </div>
-    </div>
+    </>
   )
-})
+}

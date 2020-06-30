@@ -5,10 +5,8 @@ import Container from './container'
 
 export default function () {
   return (
-    <div>
-      <DndProvider backend={HTML5Backend}>
-			  <Container />
-		  </DndProvider>
-    </div>
+    <DndProvider backend={HTML5Backend}>
+			<Container />
+	  </DndProvider>
   )
 }

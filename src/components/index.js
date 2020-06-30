@@ -2,37 +2,28 @@ import React, { useState, useCallback } from 'react'
 import { Table, Button, Badge, Popconfirm } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import JSONPretty from 'react-json-pretty'
+import { useStore, dispatch } from 'nycticorax'
 import 'react-json-pretty/themes/acai.css'
 import Editor from './editor'
 import classes from './index.module.less'
 
 export default function () {
-  const [data, setData] = useState([{
-    name: 'test-component',
-    version: '0.1.0',
-    silent: true,
-    props: {
-      switch: false,
-      number: 5,
-      text: '$090',
-    },
-  }])
+  const { components } = useStore('components')
   const [index, setIndex] = useState(-2)
 
   const onEdit = useCallback((v) => {
     if (index === -1) {
-      data.push(v)
+      components.push(v)
     } else {
-      data[index] = v
+      components[index] = v
     }
-
-    setData(data.slice(0))
+    dispatch({ components })
     setIndex(-2)
-  }, [data, index])
+  }, [components, index])
   const onDelete = useCallback((i) => {
-    data.splice(i, 1)
-    setData(data.slice(0))
-  }, [data])
+    components.splice(i, 1)
+    dispatch({ components })
+  }, [components])
 
   const columns = [
     {
@@ -83,7 +74,7 @@ export default function () {
     <>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={components}
         pagination={false}
       />
       <Button
@@ -94,7 +85,7 @@ export default function () {
       />
       <Editor
         visible={index > -2}
-        defaultData={data[index]}
+        defaultData={components[index]}
         onCancel={() => setIndex(-2)}
         onOk={onEdit}
       />
