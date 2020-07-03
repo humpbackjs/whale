@@ -38,6 +38,14 @@ export default function () {
       }
     },
     {
+      title: 'URL',
+      dataIndex: 'url',
+      width: 300,
+      render(url, { version }) {
+        return <div style={{ wordBreak: 'break-all' }}>{url.replace(/\${version}/g, version)}</div>
+      }
+    },
+    {
       title: 'Silent',
       dataIndex: 'silent',
       render(silent) {
@@ -47,7 +55,7 @@ export default function () {
     {
       title: 'Props',
       dataIndex: 'props',
-      render(props) {
+      render(props = {}) {
         return Object.keys(props).length ? <JSONPretty className={classes.code} data={props} /> : null
       }
     },

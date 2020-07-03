@@ -1,26 +1,16 @@
 import React from 'react'
 import { createStore } from 'nycticorax'
 import Components from './components'
-import Layout from './layout'
+import Routes from './routes'
+import defaultComponents from './default-components'
 
-createStore({
-  components: [{
-    name: 'test-component',
-    version: '0.1.0',
-    silent: true,
-    props: {
-      switch: false,
-      number: 5,
-      text: '$090',
-    },
-  }]
-})
+createStore({ components: defaultComponents })
 
 export default function () {
   return (
     <>
       <Components />
-      <Layout />
+      <Routes />
     </>
   )
 }

@@ -10,6 +10,7 @@ const Label = ({ name, width }) => (
 const initial = {
   name: undefined,
   version: undefined,
+  url: undefined,
   silent: false,
   props: [],
 }
@@ -24,7 +25,7 @@ export default function ({ visible, onOk, onCancel, defaultData }) {
     }
     setArgs({
       ...defaultData,
-      props: Object.entries(defaultData.props).map(([key, value]) => ({
+      props: Object.entries(defaultData.props || {}).map(([key, value]) => ({
         key,
         type: typeof value,
         value,
@@ -75,6 +76,10 @@ export default function ({ visible, onOk, onCancel, defaultData }) {
       message.error('version error')
       return
     }
+    if (!(result.url || '').includes('${version}')) {
+      message.error('url error')
+      return
+    }
     for (let i = 0; i < args.props.length; i += 1) {
       if (!isNaN(args.props[i].key[0])) {
         message.error('props error')
@@ -102,6 +107,13 @@ export default function ({ visible, onOk, onCancel, defaultData }) {
         style={{ marginBottom: 10 }}
         value={args.version}
         onChange={(e) => onChange('version', e.target.value)}
+      />
+      <Input
+        addonBefore={<Label width={54} name="URL" />}
+        style={{ marginBottom: 10 }}
+        value={args.url}
+        placeholder="${version} for component version"
+        onChange={(e) => onChange('url', e.target.value)}
       />
       <div className={classes.props}>
         Silent
