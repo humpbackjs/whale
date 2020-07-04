@@ -8,28 +8,44 @@ const Label = ({ name, width }) => (
 
 const initial = {
   name: undefined,
-  path: undefined,
+  path: [],
   components: [],
 }
 
 export default function ({ visible, onOk, onCancel, defaultData }) {
+  const { components } = useStore('components')
   const [args, setArgs] = useState(initial)
 
   const onConfirm = useCallback(() => {
-    onOk()
-  })
+    if (!args.name) {
+      message.error('name error')
+      return
+    }
+    if (!args.path.length || args.path.some((item) => item[0] !== '/')) {
+      message.error('path error')
+      return
+    }
+    if (!args.components.length) {
+      message.error('components error')
+      return
+    }
+    onOk(args)
+  }, [args])
 
   const onChange = useCallback((key, value) => {
     setArgs({ ...args, [key]: value })
   }, [args])
 
   useEffect(() => {
+    if (!visible) {
+      return
+    }
     if (!defaultData) {
       setArgs(initial)
       return
     }
     setArgs(defaultData)
-  }, [defaultData])
+  }, [defaultData, visible])
 
   return (
     <Modal
@@ -44,12 +60,28 @@ export default function ({ visible, onOk, onCancel, defaultData }) {
         value={args.name}
         onChange={(e) => onChange('name', e.target.value)}
       />
-      <Input
-        addonBefore={<Label width={54} name="Path" />}
-        style={{ marginBottom: 10 }}
+      <Select
+        mode="tags"
+        style={{ width: '100%', marginBottom: 10 }}
+        placeholder="Input path"
         value={args.path}
-        onChange={(e) => onChange('path', e.target.value)}
+        onChange={(v) => onChange('path', v)}
       />
+      <Select
+        placeholder="Select components"
+        mode="multiple"
+        style={{ width: '100%' }}
+        value={args.components}
+        onChange={(v) => onChange('components', v)}
+      >
+        {
+          components.map(({ name }) => (
+            <Select.Option value={name} key={name}>
+              {name}
+            </Select.Option>
+          ))
+        }
+      </Select>
     </Modal>
   )
 }

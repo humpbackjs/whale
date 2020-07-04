@@ -19,6 +19,9 @@ export default function ({ visible, onOk, onCancel, defaultData }) {
   const [args, setArgs] = useState(initial)
 
   useEffect(() => {
+    if (!visible) {
+      return
+    }
     if (!defaultData) {
       setArgs(initial)
       return
@@ -31,7 +34,7 @@ export default function ({ visible, onOk, onCancel, defaultData }) {
         value,
       }))
     })
-  }, [defaultData])
+  }, [defaultData, visible])
 
   const onChange = useCallback((key, value) => {
     setArgs({ ...args, [key]: value })
@@ -112,7 +115,7 @@ export default function ({ visible, onOk, onCancel, defaultData }) {
         addonBefore={<Label width={54} name="URL" />}
         style={{ marginBottom: 10 }}
         value={args.url}
-        placeholder="${version} for component version"
+        placeholder="use ${version} for component version"
         onChange={(e) => onChange('url', e.target.value)}
       />
       <div className={classes.props}>

@@ -13,7 +13,7 @@ export default function () {
     } else {
       pages[index] = v
     }
-    setPages(pages)
+    setPages(pages.slice())
     setIndex(-2)
   }, [pages, index])
 
@@ -40,7 +40,7 @@ export default function () {
     <>
       <Table
         columns={columns}
-        dataSource={[]}
+        dataSource={pages}
         pagination={false}
       />
       <Button
