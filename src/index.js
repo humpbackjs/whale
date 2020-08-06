@@ -1,20 +1,17 @@
 import React from 'react'
+import { HashRouter as Router } from 'react-router-dom'
 import { createStore } from 'nycticorax'
-import Components from './components'
-import Routes from './routes'
-import Dependencies from './dependencies'
-import Layout from './layout'
-import defaultComponents from './default-components'
+import STORE from './store'
+import Nav from './components/nav'
+import Container from './components/container'
 
-createStore({ components: defaultComponents })
+createStore(STORE)
 
 export default function () {
   return (
-    <>
-      <Layout />
-      <Components />
-      <Routes />
-      <Dependencies />
-    </>
+    <Router>
+      <Nav />
+      <Container />
+    </Router>
   )
 }
