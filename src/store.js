@@ -52,5 +52,45 @@ export default {
       url: 'https://cdn/path/${version}/index.js',
       version: '0.0.0',
     },
+    {
+      name: 'c6',
+      url: 'https://cdn/path/${version}/index.js',
+      version: '0.0.0',
+    },
+    {
+      name: 'c7',
+      url: 'https://cdn/path/${version}/index.js',
+      version: '0.0.0',
+    },
+    {
+      name: 'c8',
+      url: 'https://cdn/path/${version}/index.js',
+      version: '0.0.0',
+    },
+    {
+      name: 'c9',
+      url: 'https://cdn/path/${version}/index.js',
+      version: '0.0.0',
+    },
+    {
+      name: 'c10',
+      url: 'https://cdn/path/${version}/index.js',
+      version: '0.0.0',
+    },
+    {
+      name: 'c11',
+      url: 'https://cdn/path/${version}/index.js',
+      version: '0.0.0',
+    },
+    {
+      name: 'c12',
+      url: 'https://cdn/path/${version}/index.js',
+      version: '0.0.0',
+    },
+    {
+      name: 'c13',
+      url: 'https://cdn/path/${version}/index.js',
+      version: '0.0.0',
+    },
   ],
 }

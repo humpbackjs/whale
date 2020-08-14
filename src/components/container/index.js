@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Route, useLocation, useHistory } from 'react-router-dom'
 import { Modal } from 'antd'
-import { ArrowsAltOutlined, CloseCircleOutlined, ShrinkOutlined } from '@ant-design/icons'
+import { ArrowsAltOutlined, ShrinkOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import routes from '../../routes'
 import classes from './index.module.less'
 
@@ -14,23 +14,39 @@ export default function () {
 
   useEffect(() => {
     if (!frEe.current) {
-      console.log('666')
       return
     }
 
-    console.log('?')
-
-    frEe.current.addEventListener('fullscreenchange', (e) => {
-      console.log(e)
-    })
-
+    const listener = () => setFr(!!document.fullscreenElement)
+    frEe.current.addEventListener('fullscreenchange', listener)
     // eslint-disable-next-line consistent-return
-    return () => frEe.current.removeEventListener('fullscreenchange')
+    return () => frEe.current.removeEventListener('fullscreenchange', listener)
   }, [frEe.current])
 
   return (
     <Modal
-      title={name}
+      title={(
+        <div className={classes.header}>
+          <div>{name}</div>
+          <div className={classes.icon} style={{ marginRight: fr ? 0 : 24 }}>
+            {
+              fr ? (
+                <ShrinkOutlined onClick={() => document.exitFullscreen()} />
+              ) : (
+                <ArrowsAltOutlined
+                  onClick={() => {
+                    if (!frEe.current) {
+                      frEe.current = document.querySelector('.ant-modal')
+                      setFr(true)
+                    }
+                    frEe.current.requestFullscreen()
+                  }}
+                />
+              )
+            }
+          </div>
+        </div>
+      )}
       maskClosable={false}
       visible={!!name}
       footer={null}
@@ -40,35 +56,8 @@ export default function () {
         height: fr ? '100%' : 'auto',
         paddingBottom: fr ? 0 : 24,
       }}
-      closeIcon={(
-        <>
-          {
-            fr ? (
-              <ShrinkOutlined
-                onClick={(e) => {
-                  e.stopPropagation()
-                  document.exitFullscreen()
-                  setFr(false)
-                }}
-              />
-            ) : (
-              <ArrowsAltOutlined
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (!frEe.current) {
-                    frEe.current = document.querySelector('.ant-modal')
-                  }
-                  frEe.current.requestFullscreen()
-                  setFr(true)
-                }}
-              />
-            )
-          }
-          {
-            fr ? null : <CloseCircleOutlined />
-          }
-        </>
-      )}
+      closable={!fr}
+      closeIcon={<CloseCircleOutlined />}
       onCancel={history.goBack}
     >
       {
