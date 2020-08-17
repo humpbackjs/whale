@@ -1,5 +1,6 @@
 /* eslint-disable no-template-curly-in-string */
 export default {
+  addType: '',
   components: [
     {
       name: 'c0',

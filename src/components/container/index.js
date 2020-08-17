@@ -1,16 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Route, useLocation, useHistory } from 'react-router-dom'
-import { Modal } from 'antd'
-import { ArrowsAltOutlined, ShrinkOutlined, CloseCircleOutlined } from '@ant-design/icons'
+import { Modal, Button } from 'antd'
+import { dispatch, useStore } from 'nycticorax'
+import {
+  ArrowsAltOutlined, ShrinkOutlined, CloseCircleOutlined, PlusOutlined,
+} from '@ant-design/icons'
 import routes from '../../routes'
 import classes from './index.module.less'
 
 export default function () {
   const { pathname } = useLocation()
   const history = useHistory()
+  const addType = useStore()
   const { name } = routes.find((item) => item.path === pathname) || {}
   const [fr, setFr] = useState(false)
   const frEe = useRef(null)
+
+  console.log(addType)
 
   useEffect(() => {
     if (!frEe.current) {
@@ -27,7 +33,16 @@ export default function () {
     <Modal
       title={(
         <div className={classes.header}>
-          <div>{name}</div>
+          <div>
+            {name}
+            <Button
+              size="small"
+              type="primary"
+              shape="circle"
+              icon={<PlusOutlined />}
+              onClick={() => dispatch({ addType: 'config' })}
+            />
+          </div>
           <div className={classes.icon} style={{ marginRight: fr ? 0 : 24 }}>
             {
               fr ? (
