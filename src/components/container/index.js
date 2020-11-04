@@ -11,12 +11,10 @@ import classes from './index.module.less'
 export default function () {
   const { pathname } = useLocation()
   const history = useHistory()
-  const addType = useStore()
+  const { editing } = useStore('editing')
   const { name } = routes.find((item) => item.path === pathname) || {}
   const [fr, setFr] = useState(false)
   const frEe = useRef(null)
-
-  console.log(addType)
 
   useEffect(() => {
     if (!frEe.current) {
@@ -36,11 +34,12 @@ export default function () {
           <div>
             {name}
             <Button
+              className={classes.add}
               size="small"
               type="primary"
               shape="circle"
               icon={<PlusOutlined />}
-              onClick={() => dispatch({ addType: 'config' })}
+              onClick={() => dispatch({ editing: 'config' })}
             />
           </div>
           <div className={classes.icon} style={{ marginRight: fr ? 0 : 24 }}>
@@ -63,7 +62,7 @@ export default function () {
         </div>
       )}
       maskClosable={false}
-      visible={!!name}
+      visible={!!name && !editing}
       footer={null}
       centered
       width="78%"
